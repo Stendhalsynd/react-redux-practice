@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+    <style>
+      table {
+        border-spacing: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MVC</h1>
+    <h2>유저정보</h2>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>성별</th>
+          <th>전공</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.map(user => { %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= user.gender %></td>
+          <td><%= user.major %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <br />
+    <div>
+      <form name="register">
+        <input type="text" id="name" placeholder="이름" /> <br />
+        <input type="text" id="gender" placeholder="성별" /> <br />
+        <input type="text" id="major" placeholder="전공" /> <br />
+        <button type="button" onclick="registerFunc()">등록</button>
+      </form>
+    </div>
+  </body>
+
+  <script>
+    // const lists = document.querySelector("#lists li");
+    function registerFunc() {
+      const form = document.forms["register"];
+      const data = {
+        name: form.name.value,
+        gender: form.gender.value,
+        major: form.major.value,
+      };
+      axios({
+        method: "post",
+        url: "/register",
+        data,
+      }).then((response) => {
+        document.location.reload();
+        // lists.remove();
+        // response.data.forEach((elem) => {
+        //   const data = `<li>
+        //         <p>이름: ${elem.name}</p>
+        //         <p>성별: ${elem.gender}</p>
+        //         <p>전공: ${elem.major}</p>
+        //     </li>`
+        // });
+      });
+    }
+  </script>
+</html>
