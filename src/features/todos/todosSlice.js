@@ -44,6 +44,8 @@ export const todoAdded = createAsyncThunk(
             completed: false,
           })
         );
+
+      dispatch(fetchTodos());
     } catch (error) {
       console.error("Error adding todo:", error);
     }
@@ -75,6 +77,8 @@ export const editTodo = createAsyncThunk(
             completed,
           })
         );
+
+        dispatch(fetchTodos());
       }
     } catch (error) {
       console.error("Error editing todo:", error);
@@ -83,15 +87,20 @@ export const editTodo = createAsyncThunk(
   }
 );
 
-export const deleteTodo = createAsyncThunk("todos/deleteTodo", async (id) => {
-  try {
-    await axios.delete(`http://localhost:8000/todo/${id + 1}`);
-    return id + 1;
-  } catch (error) {
-    console.error("Error deleting todo:", error);
-    throw error;
+export const deleteTodo = createAsyncThunk(
+  "todos/deleteTodo",
+  async (id, { dispatch }) => {
+    try {
+      await axios.delete(`http://localhost:8000/todo/${id + 1}`);
+
+      dispatch(fetchTodos());
+      return id + 1;
+    } catch (error) {
+      console.error("Error deleting todo:", error);
+      throw error;
+    }
   }
-});
+);
 
 export const todoDeleted = createAsyncThunk(
   "todos/todoDeleted",

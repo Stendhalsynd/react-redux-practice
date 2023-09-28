@@ -1,8 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
 import {
-  todoAdded,
   todoToggled,
   todoDeleted,
   allCompleted,
@@ -16,70 +14,14 @@ import {
   filterStatus,
   StatusFilters,
 } from "../filters/filtersSlice";
-import styled from "styled-components";
+import {
+  InputStyle,
+  titleStyle,
+  itemContainerStyle,
+  footerContainerStyle,
+} from "./style";
 
-const InputStyle = styled.input`
-  border: none;
-  width: 100%;
-  box-sizing: border-box;
-`;
-
-const titleStyle = {
-  padding: "15px",
-  background: "antiquewhite",
-  fontWeight: "bold",
-  fontSize: "x-large",
-};
-
-const itemContainerStyle = {
-  display: "grid",
-  gridTemplateColumns: "1fr 14fr 1fr",
-  padding: "10px 0",
-};
-
-const footerContainerStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "10px",
-  borderBottom: "0.5px solid black",
-};
-
-function TodoForm({ dispatch, fetchTodos }) {
-  const { control, handleSubmit, reset } = useForm();
-
-  const onSubmit = (data) => {
-    dispatch(todoAdded(data.textInput));
-    reset();
-    dispatch(fetchTodos());
-  };
-
-  return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        margin: "10px",
-        width: "100%",
-      }}
-    >
-      <Controller
-        name="textInput"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <input
-            type="text"
-            {...field}
-            placeholder="Add to do"
-            style={{ width: "90vw" }}
-          />
-        )}
-      />
-      <button type="submit">add</button>
-    </form>
-  );
-}
+import TodoForm from "./TodoForm";
 
 export function Todo() {
   const dispatch = useDispatch();
@@ -113,7 +55,7 @@ export function Todo() {
           margin: "10px",
         }}
       >
-        {<TodoForm dispatch={dispatch} fetchTodos={fetchTodos} />}
+        {<TodoForm dispatch={dispatch} />}
       </div>
       <ul>
         {resultTodos(currentStatus).map((todo) => (
@@ -142,7 +84,6 @@ export function Todo() {
                         completed: todo.completed,
                       })
                     );
-                    dispatch(fetchTodos());
                     setEditingTodoId(null);
                     setTodoInput("");
 
@@ -154,7 +95,6 @@ export function Todo() {
             <button
               onClick={() => {
                 dispatch(todoDeleted(todo.id));
-                dispatch(fetchTodos());
               }}
             >
               x
