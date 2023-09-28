@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 import {
   todoAdded,
   todoToggled,
@@ -43,11 +44,47 @@ const footerContainerStyle = {
   borderBottom: "0.5px solid black",
 };
 
+function TodoForm({ dispatch, fetchTodos }) {
+  const { control, handleSubmit, reset } = useForm();
+
+  const onSubmit = (data) => {
+    dispatch(todoAdded(data.textInput));
+    reset();
+    dispatch(fetchTodos());
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        margin: "10px",
+        width: "100%",
+      }}
+    >
+      <Controller
+        name="textInput"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <input
+            type="text"
+            {...field}
+            placeholder="Add to do"
+            style={{ width: "90vw" }}
+          />
+        )}
+      />
+      <button type="submit">add</button>
+    </form>
+  );
+}
+
 export function Todo() {
   const dispatch = useDispatch();
   const todoList = useSelector(todos).todos;
   const currentStatus = useSelector(filterStatus);
-  const [textInput, setTextInput] = useState("");
   const [todoInput, setTodoInput] = useState("");
   const [editingTodoId, setEditingTodoId] = useState(null);
 
@@ -76,22 +113,7 @@ export function Todo() {
           margin: "10px",
         }}
       >
-        <input
-          type="text"
-          value={textInput}
-          onChange={(e) => setTextInput(e.target.value)}
-          placeholder="할일 추가하기"
-          style={{ width: "93vw" }}
-        />
-        <button
-          onClick={() => {
-            dispatch(todoAdded(textInput));
-            setTextInput("");
-            dispatch(fetchTodos());
-          }}
-        >
-          add
-        </button>
+        {<TodoForm dispatch={dispatch} fetchTodos={fetchTodos} />}
       </div>
       <ul>
         {resultTodos(currentStatus).map((todo) => (
