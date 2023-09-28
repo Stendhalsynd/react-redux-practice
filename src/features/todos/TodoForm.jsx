@@ -1,8 +1,8 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { todoAdded } from "./todosSlice";
 
 export default function TodoForm({ dispatch }) {
-  const { control, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = (data) => {
     dispatch(todoAdded(data.textInput));
@@ -19,18 +19,11 @@ export default function TodoForm({ dispatch }) {
         width: "100%",
       }}
     >
-      <Controller
-        name="textInput"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <input
-            type="text"
-            {...field}
-            placeholder="Add to do"
-            style={{ width: "90vw" }}
-          />
-        )}
+      <input
+        type="text"
+        style={{ width: "90vw" }}
+        placeholder="할일을 추가하세요"
+        {...register("textInput", { required: true })}
       />
       <button type="submit">add</button>
     </form>
